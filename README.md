@@ -125,11 +125,6 @@ Backend (FastAPI)
 Final JSON Response → Rendered in React (Charts + AI Chat)
 ```
 
----
-![alt text](<WhatsApp Image 2025-09-14 at 10.55.25_15a6b707.jpg>)
-## 🤝 Contributors
-- 👨‍💻 Your Name  
-- 👩‍💻 Team Member  
 
 ---
 

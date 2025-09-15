@@ -1,0 +1,13 @@
+__pycache__
+*.pyc
+*.pyo
+.vscode
+env
+frontend_hackathon/
+data_ingestion.py
+data.json
+.DS_Store
+.env.example
+models.py
+README.md 
+*app

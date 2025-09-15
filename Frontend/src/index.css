@@ -1,0 +1,52 @@
+/* Add to src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Add this to your existing CSS variables in src/index.css */
+:root {
+    --primary-color: #137fec;
+    --primary-hover-color: #0b8dce;
+    --secondary-color: #f0f3f4;
+    --text-primary: #111618;
+    --text-secondary: #617c89;
+    --border-color: #dbe2e6;
+    --success-color: #078836;
+    --danger-color: #e73508;
+}
+
+
+body {
+    font-family: 'Manrope', sans-serif;
+}
+
+.active-nav {
+    color: var(--primary-color);
+    position: relative;
+}
+
+.active-nav::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+}
+
+.summary-card {
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.summary-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}

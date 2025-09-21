@@ -82,6 +82,7 @@ uvicorn main:app --reload
 ### 3️⃣ Frontend Setup (React + Vite)
 ```bash
 cd frontend
+npm install vite
 npm install
 npm run dev
 ```

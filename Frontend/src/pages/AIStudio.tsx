@@ -95,27 +95,13 @@ const AIStudio: React.FC = () => {
         ? templates
         : templates.filter(t => t.category === selectedCategory);
 
-    const quickActions = [
-        'How much should I save each month?',
-        'Is now a good time to invest?',
-        'Should I pay off debt or invest?',
-        'How to improve my credit score?'
-    ];
+
 
     // ✅ HANDLE TEMPLATE CLICK - Navigate to chat with prompt
     const handleTemplateClick = (template: Template) => {
         navigate('/app/chat', {
             state: {
                 sendMessage: template.prompt
-            }
-        });
-    };
-
-    // ✅ HANDLE QUICK ACTION CLICK - Navigate to chat with question
-    const handleQuickActionClick = (question: string) => {
-        navigate('/app/chat', {
-            state: {
-                sendMessage: question
             }
         });
     };
@@ -141,29 +127,6 @@ const AIStudio: React.FC = () => {
                             Get instant, personalized financial advice using our AI-powered templates and tools.
                             Make smarter financial decisions with confidence.
                         </p>
-                    </div>
-
-                    {/* Quick Actions */}
-                    <div className="mb-12">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-6">Quick Questions</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                            {quickActions.map((question, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => handleQuickActionClick(question)}
-                                    className="bg-white p-4 rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all duration-200 text-left group"
-                                >
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-sm font-medium text-gray-700 group-hover:text-blue-600">
-                                            {question}
-                                        </span>
-                                        <span className="material-symbols-outlined text-gray-400 group-hover:text-blue-500">
-                                            arrow_forward
-                                        </span>
-                                    </div>
-                                </button>
-                            ))}
-                        </div>
                     </div>
 
                     {/* Category Filter */}
@@ -236,10 +199,6 @@ const AIStudio: React.FC = () => {
                         <form onSubmit={(e) => {
                             e.preventDefault();
                             const input = e.currentTarget.elements.namedItem('message') as HTMLInputElement;
-                            if (input.value.trim()) {
-                                handleQuickActionClick(input.value.trim());
-                                input.value = '';
-                            }
                         }} className="flex gap-4">
                             <div className="flex-1 relative">
                                 <input

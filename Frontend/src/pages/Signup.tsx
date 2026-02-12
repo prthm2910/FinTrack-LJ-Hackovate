@@ -84,7 +84,7 @@ const Signup: React.FC = () => {
         <div className="min-h-screen flex items-center justify-center bg-gray-100 px-6">
             <div className="max-w-md w-full bg-white rounded-lg shadow-md p-10">
                 <h1 className="text-3xl font-semibold text-gray-900 mb-8 text-center">
-                    Create your Financio account
+                    Create your FinTrack account
                 </h1>
 
                 {error && (

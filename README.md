@@ -56,8 +56,8 @@ cd finance-ai-assistant
 ### 2️⃣ Backend Setup (FastAPI)
 ```bash
 cd backend
-python -m venv venv
-source venv/bin/activate   # (On Windows: venv\Scripts\activate)
+python -m venv env
+source # (On Windows: env\Scripts\activate)
 pip install -r requirements.txt
 ```
 

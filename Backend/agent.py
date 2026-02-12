@@ -25,12 +25,12 @@ DB_USER = os.environ.get("DB_USER", "postgres")
 raw_pass = os.environ.get("DB_PASS", "default_password")
 DB_PASS = urllib.parse.quote_plus(raw_pass)
 DB_NAME = os.environ.get("DB_NAME", "fintrack")
-PUBLIC_IP = os.environ.get("PUBLIC_IP", "127.0.0.1")
+DB_HOST = os.environ.get("DB_HOST", "127.0.0.1")
 DB_PORT = os.environ.get("DB_PORT", "5432")
 
 def get_engine():
     """Creates a SQLAlchemy engine using a standard connection string."""
-    db_uri = f"postgresql+pg8000://{DB_USER}:{DB_PASS}@{PUBLIC_IP}:{DB_PORT}/{DB_NAME}"
+    db_uri = f"postgresql+pg8000://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     try:
         engine = sqlalchemy.create_engine(db_uri)
         with engine.connect() as connection:

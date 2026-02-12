@@ -1,0 +1,24 @@
+/your_project_root/
+├── api/
+│   ├── __init__.py
+│   └── v1/
+│       ├── __init__.py
+│       ├── router.py
+│       └── endpoints/
+│           ├── __init__.py
+│           ├── ai.py
+│           ├── dashboard.py
+│           ├── data_entry.py
+│           └── users.py
+├── config/
+│   ├── __init__.py
+│   └── database.py
+├── models/
+│   ├── __init__.py
+│   └── schemas.py
+├── services/
+│   ├── __init__.py
+│   ├── ai_agent.py
+│   └── permissions.py
+├── main.py
+└── .env

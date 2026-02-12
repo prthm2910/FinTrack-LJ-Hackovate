@@ -1,6 +1,6 @@
 // src/firebase.ts
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, getAdditionalUserInfo, signInWithEmailAndPassword } from 'firebase/auth';
 
 const firebaseConfig = {
     apiKey: "AIzaSyDShuK3fBgPF6CGJdBHkZMekJxzrFw4Vjs",
@@ -22,4 +22,5 @@ export {
     signInWithPopup,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
+    getAdditionalUserInfo
 };

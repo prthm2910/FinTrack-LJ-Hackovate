@@ -1,23 +1,28 @@
 import json
 import sqlalchemy # type: ignore
 import urllib.parse
+import os
+from dotenv import load_dotenv
 
-# --- 1. Database Connection Settings (Public IP Method) ---
-# ⚠️ Replace with your actual Cloud SQL details
-DB_USER = "postgres"
-DB_PASS = urllib.parse.quote_plus("Hapy@1234")  # URL encode special characters
-DB_NAME = "fintrack"
-PUBLIC_IP = "34.31.134.92"  # Find this on the instance overview page
-DB_PORT = "5432"  # Default PostgreSQL port
+# Load environment variables from .env file
+load_dotenv()
+
+# --- 1. Database Connection Settings from .env ---
+DB_USER = os.environ.get("DB_USER", "postgres")
+raw_pass = os.environ.get("DB_PASS", "default_password")
+DB_PASS = urllib.parse.quote_plus(raw_pass)
+DB_NAME = os.environ.get("DB_NAME", "fintrack")
+DB_HOST = os.environ.get("DB_HOST", "127.0.0.1")
+DB_PORT = os.environ.get("DB_PORT", "5432")
 
 # --- 2. Load JSON Data ---
 with open('data.json', 'r') as f:
     data = json.load(f)
 
-# --- 3. Database Connection Logic (Public IP Method) ---
+# --- 3. Database Connection Logic ---
 def get_engine():
     """Creates a SQLAlchemy engine using a standard connection string."""
-    db_uri = f"postgresql+pg8000://{DB_USER}:{DB_PASS}@{PUBLIC_IP}:{DB_PORT}/{DB_NAME}"
+    db_uri = f"postgresql+pg8000://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     engine = sqlalchemy.create_engine(db_uri)
     return engine
 
@@ -89,11 +94,11 @@ def insert_data():
                         for inv in user['investments']:
                             conn.execute(inv_stmt, {"user_id": user['user_id'], **inv})
                 
-                print("\n✅ Data insertion successful!")
+                print("\n[SUCCESS] Data insertion successful!")
             except Exception as e:
-                print(f"❌ An error occurred: {e}")
+                print(f"[ERROR] An error occurred: {e}")
                 transaction.rollback()
-                print("⚠️ Transaction rolled back.")
+                print("[WARNING] Transaction rolled back.")
 
 if __name__ == "__main__":
     insert_data()

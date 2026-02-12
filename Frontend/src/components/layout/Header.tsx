@@ -64,11 +64,6 @@ const Header: React.FC = () => {
 
                         {/* Right: Actions + Your Existing Profile */}
                         <div className="flex items-center gap-4">
-                            {/* Welcome Message */}
-                            <div className="hidden lg:block text-right mr-2">
-                                <p className="text-sm text-gray-600">Welcome back,</p>
-                                <p className="text-sm font-medium text-gray-900">Sarah! 👋</p>
-                            </div>
 
                             {/* Notifications */}
                             <button className="relative p-2 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] focus:ring-offset-2 rounded-full transition-colors">

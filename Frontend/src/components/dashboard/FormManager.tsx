@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import TransactionForm from '../forms/TransactionForm';
 import AssetForm from '../forms/AssetForm';
 import InvestmentForm from '../forms/InvestmentForm';
-import LiabilityForm from '../forms/LiabilityForm'; // Add this import
-import type {TransactionFormData, AssetFormData, InvestmentFormData, LiabilityFormData} from '../../types/forms';
+import LiabilityForm from '../forms/LiabilityForm';
+import type { TransactionFormData, AssetFormData, InvestmentFormData, LiabilityFormData } from '../../types/forms';
 
 const FormManager: React.FC = () => {
     const [activeForm, setActiveForm] = useState<string | null>(null);
@@ -15,7 +15,11 @@ const FormManager: React.FC = () => {
             body: JSON.stringify(data)
         });
 
-        if (!response.ok) throw new Error('Failed to add transaction');
+        if (response.ok) {
+            window.location.reload(); // Refresh the page on success
+        } else {
+            throw new Error('Failed to add transaction');
+        }
     };
 
     const handleAddAsset = async (data: AssetFormData) => {
@@ -25,7 +29,11 @@ const FormManager: React.FC = () => {
             body: JSON.stringify(data)
         });
 
-        if (!response.ok) throw new Error('Failed to add asset');
+        if (response.ok) {
+            window.location.reload(); // Refresh the page on success
+        } else {
+            throw new Error('Failed to add asset');
+        }
     };
 
     const handleAddInvestment = async (data: InvestmentFormData) => {
@@ -35,18 +43,25 @@ const FormManager: React.FC = () => {
             body: JSON.stringify(data)
         });
 
-        if (!response.ok) throw new Error('Failed to add investment');
+        if (response.ok) {
+            window.location.reload(); // Refresh the page on success
+        } else {
+            throw new Error('Failed to add investment');
+        }
     };
 
-    // Add liability handler
     const handleAddLiability = async (data: LiabilityFormData) => {
         const response = await fetch('http://localhost:8000/api/v1/liabilities', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
-
-        if (!response.ok) throw new Error('Failed to add liability');
+        
+        if (response.ok) {
+            window.location.reload(); // Refresh the page on success
+        } else {
+            throw new Error('Failed to add liability');
+        }
     };
 
     return (
@@ -77,7 +92,6 @@ const FormManager: React.FC = () => {
                     Add Investment
                 </button>
 
-                {/* Add Liability Button */}
                 <button
                     onClick={() => setActiveForm('liability')}
                     className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors flex items-center gap-2"
@@ -106,7 +120,6 @@ const FormManager: React.FC = () => {
                 onSubmit={handleAddInvestment}
             />
 
-            {/* Add Liability Form */}
             <LiabilityForm
                 isOpen={activeForm === 'liability'}
                 onClose={() => setActiveForm(null)}

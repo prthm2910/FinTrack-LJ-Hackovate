@@ -5,6 +5,7 @@ import {
     googleProvider,
     signInWithPopup,
     signInWithEmailAndPassword,
+    getAdditionalUserInfo, // ADDED: Import this helper function
 } from '../firebase';
 import { useCreateUser } from '../api/hooks/useUserApi';
 
@@ -15,10 +16,9 @@ const Login: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
-    // Hook for creating user in database
     const createUserMutation = useCreateUser();
 
-    // Helper function to ensure user exists in database
+    // This function is now only called for brand new users
     const ensureUserInDatabase = async (firebaseUser: any) => {
         try {
             await createUserMutation.mutateAsync({
@@ -26,8 +26,8 @@ const Login: React.FC = () => {
                 name: firebaseUser.displayName || firebaseUser.email || 'User',
             });
         } catch (error) {
-            // User might already exist - that's fine
-            console.log('User already exists in database or creation failed:', error);
+            // This error is less likely now, but good to keep for resilience
+            console.log('User creation failed:', error);
         }
     };
 
@@ -38,8 +38,14 @@ const Login: React.FC = () => {
         try {
             const result = await signInWithPopup(auth, googleProvider);
 
-            // Ensure user exists in our database
-            await ensureUserInDatabase(result.user);
+            // CHANGED: Check if the user is new before creating a database entry
+            const additionalInfo = getAdditionalUserInfo(result);
+            if (additionalInfo?.isNewUser) {
+                console.log("New user detected, creating profile...");
+                await ensureUserInDatabase(result.user);
+            } else {
+                console.log("Welcome back, returning user!");
+            }
 
             navigate('/app/dashboard');
         } catch (err: any) {
@@ -55,10 +61,12 @@ const Login: React.FC = () => {
         setError(null);
 
         try {
-            const result = await signInWithEmailAndPassword(auth, email, password);
+            // Signing in with email/password implies the user already exists.
+            // The creation logic should be on your "Sign Up" page.
+            await signInWithEmailAndPassword(auth, email, password);
 
-            // Ensure user exists in our database
-            await ensureUserInDatabase(result.user);
+            // REMOVED: The call to ensureUserInDatabase was removed from here.
+            // A login page should not create users.
 
             navigate('/app/dashboard');
         } catch (err: any) {
@@ -72,13 +80,11 @@ const Login: React.FC = () => {
         <div className="min-h-screen flex items-center justify-center bg-gray-100 px-6">
             <div className="max-w-md w-full bg-white rounded-lg shadow-md p-10">
                 <h1 className="text-3xl font-semibold text-gray-900 mb-8 text-center">
-                    Sign In to Financio
+                    Sign In to FinTrack
                 </h1>
-
                 {error && (
                     <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">{error}</div>
                 )}
-
                 <button
                     onClick={handleGoogleSignIn}
                     disabled={isLoading}
@@ -87,13 +93,11 @@ const Login: React.FC = () => {
                     <GoogleIcon />
                     {isLoading ? 'Signing in...' : 'Sign in with Google'}
                 </button>
-
                 <div className="flex items-center my-6">
                     <hr className="flex-grow border-gray-300" />
                     <span className="mx-3 text-gray-500 text-sm font-medium">or</span>
                     <hr className="flex-grow border-gray-300" />
                 </div>
-
                 <form onSubmit={handleEmailPasswordSignIn} className="space-y-6">
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -110,7 +114,6 @@ const Login: React.FC = () => {
                             className="mt-1 w-full rounded-md border border-gray-300 px-4 py-3 focus:border-green-600 focus:ring-2 focus:ring-green-600 focus:outline-none transition disabled:opacity-50"
                         />
                     </div>
-
                     <div>
                         <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                             Password
@@ -126,7 +129,6 @@ const Login: React.FC = () => {
                             className="mt-1 w-full rounded-md border border-gray-300 px-4 py-3 focus:border-green-600 focus:ring-2 focus:ring-green-600 focus:outline-none transition disabled:opacity-50"
                         />
                     </div>
-
                     <button
                         type="submit"
                         disabled={isLoading}
@@ -135,7 +137,6 @@ const Login: React.FC = () => {
                         {isLoading ? 'Signing in...' : 'Sign In'}
                     </button>
                 </form>
-
                 <p className="text-center text-gray-600 mt-6 text-sm">
                     Don't have an account?{' '}
                     <Link to="/signup" className="text-green-600 font-medium hover:underline">

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useUser } from '../../context/UserContext';
 
 interface CreditEPFConfigModalProps {
     isOpen: boolean;
@@ -6,22 +7,23 @@ interface CreditEPFConfigModalProps {
 }
 
 const CreditEPFConfigModal: React.FC<CreditEPFConfigModalProps> = ({ isOpen, onClose }) => {
+    const { userId } = useUser();
     const [creditScore, setCreditScore] = useState(750);
     const [epfBalance, setEpfBalance] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Fetch current values when modal opens
     useEffect(() => {
-        if (isOpen) {
+        if (isOpen && userId) {
             setIsLoading(true);
             fetchCurrentValues();
         }
-    }, [isOpen]);
+    }, [isOpen, userId]);
 
     const fetchCurrentValues = async () => {
+        if (!userId) return;
         try {
-            const response = await fetch('http://localhost:8000/api/v1/users/me');
+            const response = await fetch(`http://localhost:8000/api/v1/users/me?user_id=${userId}`);
             if (response.ok) {
                 const userData = await response.json();
                 setCreditScore(userData.credit_score || 750);
@@ -35,9 +37,13 @@ const CreditEPFConfigModal: React.FC<CreditEPFConfigModalProps> = ({ isOpen, onC
     };
 
     const handleSave = async () => {
+        if (!userId) {
+            alert('User not found. Please sign in again.');
+            return;
+        }
         setIsSubmitting(true);
         try {
-            const response = await fetch('http://localhost:8000/api/v1/users/update-profile', {
+            const response = await fetch(`http://localhost:8000/api/v1/users/update-profile?user_id=${userId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -50,14 +56,14 @@ const CreditEPFConfigModal: React.FC<CreditEPFConfigModalProps> = ({ isOpen, onC
 
             if (response.ok) {
                 onClose();
-                // Optionally refresh the dashboard data
-                window.location.reload(); // Simple refresh or use state management
+                window.location.reload();
             } else {
-                throw new Error('Failed to update profile');
+                const errorData = await response.json();
+                throw new Error(errorData.detail || 'Failed to update profile');
             }
         } catch (error) {
             console.error('Error updating profile:', error);
-            alert('Failed to update profile. Please try again.');
+            alert(`Failed to update profile: ${error}`);
         } finally {
             setIsSubmitting(false);
         }
@@ -77,11 +83,10 @@ const CreditEPFConfigModal: React.FC<CreditEPFConfigModalProps> = ({ isOpen, onC
 
                 {isLoading ? (
                     <div className="flex justify-center py-8">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--primary-color)]"></div>
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
                     </div>
                 ) : (
                     <form onSubmit={(e) => { e.preventDefault(); handleSave(); }} className="space-y-4">
-                        {/* Credit Score Field */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Credit Score
@@ -89,16 +94,14 @@ const CreditEPFConfigModal: React.FC<CreditEPFConfigModalProps> = ({ isOpen, onC
                             <input
                                 type="number"
                                 min="300"
-                                max="850"
+                                max="999"
                                 value={creditScore}
                                 onChange={(e) => setCreditScore(parseInt(e.target.value) || 0)}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-[var(--primary-color)] focus:border-transparent"
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="e.g., 750"
                             />
                             <p className="text-xs text-gray-500 mt-1">Range: 300-850</p>
                         </div>
-
-                        {/* EPF Balance Field */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                                 EPF Balance (₹)
@@ -109,13 +112,11 @@ const CreditEPFConfigModal: React.FC<CreditEPFConfigModalProps> = ({ isOpen, onC
                                 step="0.01"
                                 value={epfBalance}
                                 onChange={(e) => setEpfBalance(parseFloat(e.target.value) || 0)}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-[var(--primary-color)] focus:border-transparent"
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="e.g., 50000.00"
                             />
                             <p className="text-xs text-gray-500 mt-1">Your current EPF/PF balance</p>
                         </div>
-
-                        {/* Action Buttons */}
                         <div className="flex gap-3 pt-4">
                             <button
                                 type="button"
@@ -127,7 +128,7 @@ const CreditEPFConfigModal: React.FC<CreditEPFConfigModalProps> = ({ isOpen, onC
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="flex-1 px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors disabled:opacity-50"
+                                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50"
                             >
                                 {isSubmitting ? 'Saving...' : 'Save Changes'}
                             </button>

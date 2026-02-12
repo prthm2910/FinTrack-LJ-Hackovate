@@ -38,7 +38,7 @@ const LandingPage: React.FC = () => {
                                     </clipPath>
                                 </defs>
                             </svg>
-                            <h1 className="text-2xl font-bold text-slate-800">Financio</h1>
+                            <h1 className="text-2xl font-bold text-slate-800">FinTrack</h1>
                         </div>
                     </Link>
                     <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 lg:flex"></nav>
@@ -73,7 +73,7 @@ const LandingPage: React.FC = () => {
                             Take Control of Your Finances
                         </h1>
                         <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-200">
-                            Financio helps you manage your money, track your spending, and achieve your financial goals with ease.
+                            FinTrack helps you manage your money, track your spending, and achieve your financial goals with ease.
                         </p>
                         <Link
                             to="/login"
@@ -92,7 +92,7 @@ const LandingPage: React.FC = () => {
                                 Key Features
                             </h2>
                             <p className="mt-4 text-lg text-slate-600">
-                                Explore the powerful features that make Financio your ultimate financial companion.
+                                Explore the powerful features that make FinTrack your ultimate financial companion.
                             </p>
                         </div>
                         <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -139,7 +139,7 @@ const LandingPage: React.FC = () => {
                                 About Us
                             </h2>
                             <p className="mt-4 text-lg text-slate-600">
-                                At Financio, we're passionate about empowering individuals to achieve financial freedom.
+                                At FinTrack, we're passionate about empowering individuals to achieve financial freedom.
                                 Our team of experts is dedicated to providing innovative solutions and personalized support
                                 to help you succeed on your financial journey.
                             </p>
@@ -181,7 +181,7 @@ const LandingPage: React.FC = () => {
                                 Contact Us
                             </a>
                         </nav>
-                        <p className="text-sm text-slate-600">© 2025 Financio. All rights reserved.</p>
+                        <p className="text-sm text-slate-600">© 2025 FinTrack. All rights reserved.</p>
                     </div>
                 </div>
             </footer>

@@ -12,7 +12,6 @@ const Charts: React.FC = () => {
     const chartsRef = useRef<{ [key: string]: any }>({});
 
     useEffect(() => {
-        // Load Chart.js
         if (!window.Chart) {
             const script = document.createElement('script');
             script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
@@ -27,7 +26,6 @@ const Charts: React.FC = () => {
         }
 
         return () => {
-            // Cleanup existing charts
             Object.values(chartsRef.current).forEach(chart => {
                 if (chart && typeof chart.destroy === 'function') {
                     chart.destroy();
@@ -42,7 +40,6 @@ const Charts: React.FC = () => {
 
         const { Chart } = window;
 
-        // Cleanup existing charts
         Object.values(chartsRef.current).forEach(chart => {
             if (chart && typeof chart.destroy === 'function') {
                 chart.destroy();
@@ -56,10 +53,10 @@ const Charts: React.FC = () => {
             chartsRef.current.spending = new Chart(spendingCtx.getContext('2d'), {
                 type: 'bar',
                 data: {
-                    labels: chartsData.spending_chart.labels,
+                    labels: chartsData?.spending_chart?.labels || [],
                     datasets: [{
                         label: 'Spending',
-                        data: chartsData.spending_chart.data,
+                        data: chartsData?.spending_chart?.data || [],
                         backgroundColor: 'rgba(19, 164, 236, 0.2)',
                         borderColor: 'rgba(19, 164, 236, 1)',
                         borderWidth: 1
@@ -96,10 +93,10 @@ const Charts: React.FC = () => {
             chartsRef.current.savings = new Chart(savingsCtx.getContext('2d'), {
                 type: 'line',
                 data: {
-                    labels: chartsData.savings_chart.labels,
+                    labels: chartsData?.savings_chart?.labels || [],
                     datasets: [{
                         label: 'Savings',
-                        data: chartsData.savings_chart.data,
+                        data: chartsData?.savings_chart?.data || [],
                         fill: false,
                         borderColor: 'rgb(7, 136, 54)',
                         backgroundColor: 'rgba(7, 136, 54, 0.1)',
@@ -136,10 +133,10 @@ const Charts: React.FC = () => {
             chartsRef.current.investment = new Chart(investmentCtx.getContext('2d'), {
                 type: 'line',
                 data: {
-                    labels: chartsData.investment_chart.labels,
+                    labels: chartsData?.investment_chart?.labels || [],
                     datasets: [{
                         label: 'Portfolio Value',
-                        data: chartsData.investment_chart.data,
+                        data: chartsData?.investment_chart?.data || [],
                         borderColor: 'rgb(75, 192, 192)',
                         backgroundColor: 'rgba(75, 192, 192, 0.1)',
                         tension: 0.1,
@@ -176,17 +173,14 @@ const Charts: React.FC = () => {
             chartsRef.current.allocation = new Chart(allocationCtx.getContext('2d'), {
                 type: 'pie',
                 data: {
-                    labels: chartsData.allocation_chart.labels,
+                    labels: chartsData?.allocation_chart?.labels || [],
                     datasets: [{
                         label: 'Allocation',
-                        data: chartsData.allocation_chart.data,
+                        data: chartsData?.allocation_chart?.data || [],
                         backgroundColor: [
-                            'rgba(255, 99, 132, 0.7)',
-                            'rgba(54, 162, 235, 0.7)',
-                            'rgba(255, 206, 86, 0.7)',
-                            'rgba(75, 192, 192, 0.7)',
-                            'rgba(153, 102, 255, 0.7)',
-                            'rgba(255, 159, 64, 0.7)'
+                            'rgba(255, 99, 132, 0.7)', 'rgba(54, 162, 235, 0.7)',
+                            'rgba(255, 206, 86, 0.7)', 'rgba(75, 192, 192, 0.7)',
+                            'rgba(153, 102, 255, 0.7)', 'rgba(255, 159, 64, 0.7)'
                         ],
                         hoverOffset: 4
                     }]
@@ -201,7 +195,7 @@ const Charts: React.FC = () => {
                             callbacks: {
                                 label: function(context: any) {
                                     const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
-                                    const percentage = ((context.raw / total) * 100).toFixed(1);
+                                    const percentage = total > 0 ? ((context.raw / total) * 100).toFixed(1) : 0;
                                     return context.label + ': $' + context.raw.toLocaleString() + ' (' + percentage + '%)';
                                 }
                             }
@@ -212,7 +206,6 @@ const Charts: React.FC = () => {
         }
     };
 
-    // Loading state
     if (isLoading) {
         return (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -226,7 +219,6 @@ const Charts: React.FC = () => {
         );
     }
 
-    // Error state
     if (error) {
         return (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -237,8 +229,7 @@ const Charts: React.FC = () => {
         );
     }
 
-    // No data state
-    if (!chartsData) {
+    if (!chartsData || !chartsData.spending_chart) {
         return (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="summary-card col-span-full text-center py-12">
